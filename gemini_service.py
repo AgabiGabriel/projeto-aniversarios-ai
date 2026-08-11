@@ -26,7 +26,7 @@ def processar_foto_aniversario(imagem_input_bytes: bytes, estilo_chave: str = "e
         for mod in models_to_try:
             for tentativa in range(2):
                 try:
-                    print(f"🤖 [GEMINI TENTATIVA {tentativa+1}] Modelo {mod} - Estilo: {estilo_chave}...")
+                    print(f"[GEMINI TENTATIVA {tentativa+1}] Modelo {mod} - Estilo: {estilo_chave}...")
                     response = client.models.generate_content(
                         model=mod,
                         contents=[image_pil, prompt]
@@ -35,22 +35,21 @@ def processar_foto_aniversario(imagem_input_bytes: bytes, estilo_chave: str = "e
                         img_out = response.images[0]
                         output_buffer = io.BytesIO()
                         img_out.save(output_buffer, format="JPEG")
-                        print(f"🎉 [GEMINI SUCESSO] Imagem gerada com modelo {mod}!")
+                        print(f"[GEMINI SUCESSO] Imagem gerada com modelo {mod}!")
                         return output_buffer.getvalue()
                     elif hasattr(response, 'text') and response.text:
-                        print(f"ℹ️ [GEMINI AVISO] ({mod}) retornou texto: {response.text[:120]}")
+                        print(f"[GEMINI AVISO] ({mod}) retornou texto: {response.text[:120]}")
                         break
                 except Exception as e_mod:
-                    print(f"⚠️ [GEMINI ALERTA] Modelo {mod} tentativa {tentativa+1} falhou: {e_mod}")
+                    print(f"[GEMINI ALERTA] Modelo {mod} tentativa {tentativa+1} falhou: {e_mod}")
                     time.sleep(1.5)
     except Exception as e_gen:
-        print(f"❌ [GEMINI ERRO CRÍTICO]: {e_gen}")
+        print(f"[GEMINI ERRO CRITICO]: {e_gen}")
 
-    print("⚠️ Retornando imagem original como fallback.")
+    print("Retornando imagem original como fallback.")
     output_buffer = io.BytesIO()
     image_pil.save(output_buffer, format="JPEG")
     return output_buffer.getvalue()
-
 
 
 async def processar_foto_aniversario_async(imagem_input_bytes: bytes, estilo_chave: str = "estilo_1") -> bytes:
@@ -81,7 +80,7 @@ async def responder_chat_cliente_async(mensagem_cliente: str) -> str:
     """
     api_key = os.getenv("GEMINI_API_KEY") or GEMINI_API_KEY
     if not api_key:
-        return "👋 Olá! Sou o assistente do Auto-Aniversário AI! Envie uma foto de rosto para começarmos!"
+        return "Ola! Sou o assistente do Auto-Aniversario AI! Envie uma foto de rosto para comecarmos!"
 
     prompt_sistema = f"""
     Você é o assistente virtual simpático e atencioso do "Auto-Aniversário AI".
@@ -90,7 +89,7 @@ async def responder_chat_cliente_async(mensagem_cliente: str) -> str:
     - 1 Foto HD: R$ 9,99
     - Combo 2 Fotos HD: R$ 14,99
     - Pacote VIP 3 Fotos HD: R$ 19,99
-    Responda em português brasileiro com emojis amigáveis e de forma direta.
+    Responda em português brasileiro de forma direta e sem utilizar emojis.
     
     Mensagem do cliente: "{mensagem_cliente}"
     """
@@ -105,10 +104,9 @@ async def responder_chat_cliente_async(mensagem_cliente: str) -> str:
             )
             return res.text.strip() if hasattr(res, 'text') and res.text else None
         except Exception as e:
-            print(f"⚠️ Erro no chat Gemini Flash: {e}")
+            print(f"[CHAT GEMINI ERRO]: {e}")
             return None
 
     loop = asyncio.get_running_loop()
     resposta = await loop.run_in_executor(None, _chamar_gemini_texto)
-    return resposta or "👋 Olá! Envie uma foto de rosto aqui no WhatsApp para que a nossa Inteligência Artificial crie suas artes de aniversário em alta definição! 🚀"
-
+    return resposta or "Ola! Envie uma foto de rosto aqui no WhatsApp para que a nossa Inteligencia Artificial crie suas artes de aniversario em alta definicao!"

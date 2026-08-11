@@ -36,7 +36,7 @@ if base64_str:
         base64_str = base64_str.split(",")[1]
     with open("qrcode.png", "wb") as f:
         f.write(base64.b64decode(base64_str))
-    print("✅ QR Code salvo em qrcode.png!")
+    print("QR Code salvo em qrcode.png!")
 
     # Gerar HTML
     html_content = f"""
@@ -57,11 +57,6 @@ if base64_str:
     </body>
     </html>
     """
-    with open("qrcode.html", "w") as f:
+    with open("qr.html", "w") as f:
         f.write(html_content)
-    print("🌐 QR Code HTML salvo em qrcode.html!")
-
-if qr_code_str:
-    qr = qrcode.QRCode()
-    qr.add_data(qr_code_str)
-    qr.print_ascii(invert=True)
+    print("Pagina qr.html atualizada!")

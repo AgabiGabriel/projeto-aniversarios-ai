@@ -53,7 +53,7 @@ async def processar_fluxo_foto_e_pacotes(telefone_cliente: str, image_id: str):
         await enviar_mensagem_texto(telefone_cliente, MESSAGE_WELCOME)
         imagem_original_bytes = await baixar_midia_whatsapp(image_id)
 
-        print(f"🤖 [GEMINI AI] Gerando variações de foto para {telefone_cliente}...")
+        print(f"[GEMINI AI] Gerando variaçoes de foto para {telefone_cliente}...")
         pacote_artes_dict = await gerar_pacote_artes_async(imagem_original_bytes, qtd=3)
 
         arte_principal_hd = pacote_artes_dict["estilo_1"]
@@ -67,8 +67,8 @@ async def processar_fluxo_foto_e_pacotes(telefone_cliente: str, image_id: str):
         ARTES_PENDENTES[pix_1499["payment_id"]] = {"telefone": telefone_cliente, "artes": {"estilo_1": pacote_artes_dict["estilo_1"], "estilo_2": pacote_artes_dict["estilo_2"]}, "qtd": 2, "origem": "meta"}
         ARTES_PENDENTES[pix_1999["payment_id"]] = {"telefone": telefone_cliente, "artes": pacote_artes_dict, "qtd": 3, "origem": "meta"}
 
-        print(f"📤 [WHATSAPP META] Enviando prévia protegida para {telefone_cliente}...")
-        await enviar_imagem_whatsapp(telefone_cliente, previa_bytes, legenda="📸 PRÉVIA DA SUA FOTO DE ANIVERSÁRIO")
+        print(f"[WHATSAPP META] Enviando previa protegida para {telefone_cliente}...")
+        await enviar_imagem_whatsapp(telefone_cliente, previa_bytes, legenda="PREVIA DA SUA FOTO DE ANIVERSARIO")
 
         msg_oferta = get_message_oferta_pacotes(
             pix_copia_cola_999=pix_999["pix_copia_cola"],
@@ -78,12 +78,12 @@ async def processar_fluxo_foto_e_pacotes(telefone_cliente: str, image_id: str):
         await enviar_mensagem_texto(telefone_cliente, msg_oferta)
 
     except Exception as e:
-        print(f"❌ [ERRO FLUXO META] {e}")
+        print(f"[ERRO FLUXO META] {e}")
 
 @app.post("/webhook")
 async def receber_webhook(request: Request, background_tasks: BackgroundTasks):
     payload_body = await request.json()
-    print(f"📩 [WEBHOOK META RECEBIDO]: {payload_body}")
+    print(f"[WEBHOOK META RECEBIDO]: {payload_body}")
     try:
         entry = payload_body.get("entry", [])[0]
         changes = entry.get("changes", [])[0]
@@ -102,10 +102,10 @@ async def receber_webhook(request: Request, background_tasks: BackgroundTasks):
                 background_tasks.add_task(
                     enviar_mensagem_texto, 
                     telefone, 
-                    "👋 *Olá! Sou o assistente do Auto-Aniversário AI!*\n\n📸 Envie uma **foto de perfil ou rosto** para que nossa Inteligência Artificial gere suas artes festivas de aniversário!"
+                    "*Ola! Sou o assistente do Auto-Aniversario AI!*\n\nEnvie uma **foto de perfil ou rosto** para que nossa Inteligencia Artificial gere suas artes festivas de aniversario!"
                 )
     except Exception as e:
-        print(f"⚠️ Evento Meta ignorado: {e}")
+        print(f"Evento Meta ignorado: {e}")
 
     return {"status": "recebido"}
 
@@ -119,7 +119,7 @@ async def processar_fluxo_foto_evolution(telefone_cliente: str, key_dict: dict, 
         await enviar_mensagem_texto_evolution(telefone_cliente, MESSAGE_WELCOME)
         imagem_original_bytes = await baixar_midia_evolution(key_dict, message_dict)
 
-        print(f"🤖 [GEMINI AI - EVOLUTION] Gerando variações para {telefone_cliente}...")
+        print(f"[GEMINI AI - EVOLUTION] Gerando variaçoes para {telefone_cliente}...")
         pacote_artes_dict = await gerar_pacote_artes_async(imagem_original_bytes, qtd=3)
 
         arte_principal_hd = pacote_artes_dict["estilo_1"]
@@ -133,8 +133,8 @@ async def processar_fluxo_foto_evolution(telefone_cliente: str, key_dict: dict, 
         ARTES_PENDENTES[pix_1499["payment_id"]] = {"telefone": telefone_cliente, "artes": {"estilo_1": pacote_artes_dict["estilo_1"], "estilo_2": pacote_artes_dict["estilo_2"]}, "qtd": 2, "origem": "evolution"}
         ARTES_PENDENTES[pix_1999["payment_id"]] = {"telefone": telefone_cliente, "artes": pacote_artes_dict, "qtd": 3, "origem": "evolution"}
 
-        print(f"📤 [WHATSAPP EVOLUTION] Enviando prévia para {telefone_cliente}...")
-        await enviar_imagem_evolution(telefone_cliente, previa_bytes, legenda="📸 PRÉVIA DA SUA FOTO DE ANIVERSÁRIO")
+        print(f"[WHATSAPP EVOLUTION] Enviando previa para {telefone_cliente}...")
+        await enviar_imagem_evolution(telefone_cliente, previa_bytes, legenda="PREVIA DA SUA FOTO DE ANIVERSARIO")
 
         msg_oferta = get_message_oferta_pacotes(
             pix_copia_cola_999=pix_999["pix_copia_cola"],
@@ -144,7 +144,7 @@ async def processar_fluxo_foto_evolution(telefone_cliente: str, key_dict: dict, 
         await enviar_mensagem_texto_evolution(telefone_cliente, msg_oferta)
 
     except Exception as e:
-        print(f"❌ [ERRO FLUXO EVOLUTION] {e}")
+        print(f"[ERRO FLUXO EVOLUTION] {e}")
 
 async def processar_chat_texto_evolution(telefone_cliente: str, texto_recebido: str):
     from gemini_service import responder_chat_cliente_async
@@ -154,7 +154,7 @@ async def processar_chat_texto_evolution(telefone_cliente: str, texto_recebido: 
 @app.post("/webhook/evolution")
 async def webhook_evolution(request: Request, background_tasks: BackgroundTasks):
     payload_body = await request.json()
-    print(f"📩 [EVOLUTION RECEBIDO]: {payload_body}")
+    print(f"[EVOLUTION RECEBIDO]: {payload_body}")
 
     try:
         event = payload_body.get("event")
@@ -178,10 +178,9 @@ async def webhook_evolution(request: Request, background_tasks: BackgroundTasks)
                 texto_msg = message.get("conversation") or message.get("extendedTextMessage", {}).get("text", "")
                 background_tasks.add_task(processar_chat_texto_evolution, telefone_cliente, texto_msg)
     except Exception as e:
-        print(f"⚠️ Evento Evolution ignorado: {e}")
+        print(f"Evento Evolution ignorado: {e}")
 
     return {"status": "ok"}
-
 
 
 # ==============================================================================
@@ -194,14 +193,14 @@ async def entregar_artes_hd(telefone: str, artes_dict: dict, qtd: int, origem: s
         await enviar_mensagem_texto_evolution(telefone, msg_confirmacao)
         idx = 1
         for estilo, img_hd_bytes in artes_dict.items():
-            legenda = f"🎁 Sua Foto HD #{idx} (Sem Marca d'Água)"
+            legenda = f"Sua Foto HD #{idx} (Sem Marca d'Agua)"
             await enviar_imagem_evolution(telefone, img_hd_bytes, legenda=legenda)
             idx += 1
     else:
         await enviar_mensagem_texto(telefone, msg_confirmacao)
         idx = 1
         for estilo, img_hd_bytes in artes_dict.items():
-            legenda = f"🎁 Sua Foto HD #{idx} (Sem Marca d'Água)"
+            legenda = f"Sua Foto HD #{idx} (Sem Marca d'Agua)"
             await enviar_imagem_whatsapp(telefone, img_hd_bytes, legenda=legenda)
             idx += 1
 
@@ -219,7 +218,7 @@ async def webhook_pagamento_pix(request: Request, background_tasks: BackgroundTa
             qtd = item["qtd"]
             origem = item.get("origem", "meta")
 
-            print(f"🎉 [PAGAMENTO PIX APROVADO] Entregando pacote de {qtd} foto(s) HD para {telefone}!")
+            print(f"[PAGAMENTO PIX APROVADO] Entregando pacote de {qtd} foto(s) HD para {telefone}!")
             background_tasks.add_task(entregar_artes_hd, telefone, artes_dict, qtd, origem)
 
     return {"status": "ok"}

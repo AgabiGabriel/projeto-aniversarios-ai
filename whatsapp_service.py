@@ -99,7 +99,7 @@ async def enviar_mensagem_texto_evolution(telefone_destino: str, texto: str) -> 
     async with httpx.AsyncClient(timeout=30.0) as client:
         res = await client.post(f"{EVOLUTION_API_URL}/message/sendText/{EVOLUTION_INSTANCE}", json=payload, headers=headers)
         res_json = res.json()
-        print(f"📤 [ENVIO TEXTO EVOLUTION RES]: {res_json}")
+        print(f"[ENVIO TEXTO EVOLUTION RES]: {res_json}")
         return res_json
 
 async def enviar_imagem_evolution(telefone_destino: str, imagem_bytes: bytes, legenda: str = "") -> dict:
@@ -119,7 +119,7 @@ async def enviar_imagem_evolution(telefone_destino: str, imagem_bytes: bytes, le
     async with httpx.AsyncClient(timeout=30.0) as client:
         res = await client.post(f"{EVOLUTION_API_URL}/message/sendMedia/{EVOLUTION_INSTANCE}", json=payload, headers=headers)
         res_json = res.json()
-        print(f"📤 [ENVIO FOTO EVOLUTION RES]: {res_json}")
+        print(f"[ENVIO FOTO EVOLUTION RES]: {res_json}")
         return res_json
 
 
@@ -146,7 +146,7 @@ async def baixar_midia_evolution(key_dict: dict, message_dict: dict) -> bytes:
                     base64_media = base64_media.split(",")[1]
                 return base64.b64decode(base64_media)
         except Exception as e:
-            print(f"⚠️ findMediaMessage aviso: {e}")
+            print(f"findMediaMessage aviso: {e}")
 
         # 2. Tentar getBase64FromMediaMessage
         try:
@@ -158,7 +158,7 @@ async def baixar_midia_evolution(key_dict: dict, message_dict: dict) -> bytes:
                     base64_media = base64_media.split(",")[1]
                 return base64.b64decode(base64_media)
         except Exception as e:
-            print(f"⚠️ getBase64FromMediaMessage aviso: {e}")
+            print(f"getBase64FromMediaMessage aviso: {e}")
 
         # 3. Fallback thumbnail
         img_msg = message_dict.get("imageMessage", {})
@@ -166,8 +166,7 @@ async def baixar_midia_evolution(key_dict: dict, message_dict: dict) -> bytes:
         if thumb:
             if "," in thumb:
                 thumb = thumb.split(",")[1]
-            print("📸 Usando thumbnail da foto como fallback!")
+            print("Usando thumbnail da foto como fallback!")
             return base64.b64decode(thumb)
 
         raise ValueError("Não foi possível obter base64 da foto via Evolution API.")
-
