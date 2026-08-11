@@ -1,0 +1,27 @@
+# Secret Environment Variables
+.env
+
+# Virtual Environment
+.venv/
+env/
+venv/
+__pycache__/
+*.pyc
+
+# Local Log & Temporary Data Files
+server.log
+qrcode.png
+test_rosto.jpg
+foto_teste.jpg
+goku_gen.jpg
+goku_banana.jpg
+banana_out.jpg
+
+# Evolution API Local Data Stores
+evolution_instances/
+evolution_store/
+
+# IDE & OS Files
+.DS_Store
+.vscode/
+.idea/
